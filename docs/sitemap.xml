@@ -13,12 +13,24 @@
     <loc>/reference/explain.html</loc>
   </url>
   <url>
+    <loc>/reference/extract.html</loc>
+  </url>
+  <url>
     <loc>/reference/hello.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/plot.html</loc>
+  </url>
+  <url>
+    <loc>/reference/print.forester.html</loc>
+  </url>
+  <url>
     <loc>/reference/train.html</loc>
+  </url>
+  <url>
+    <loc>/reference/train_randomForest.html</loc>
   </url>
 </urlset>

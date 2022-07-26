@@ -12,10 +12,10 @@ plot(model, ...)
 \item{...}{other parameters}
 }
 \value{
-
+ggplot2 object
 }
 \description{
-The generic `plot()` function creates and prints numeric sumamry
+The generic `plot()` function creates and prints numeric summary
 of forester models.
 See https://cran.r-project.org/web/packages/randomForestExplainer/index.html
 and https://github.com/ModelOriented/EIX

@@ -1,6 +1,6 @@
 #' Plot forester models
 #'
-#' The generic `plot()` function creates and prints numeric sumamry
+#' The generic `plot()` function creates and prints numeric summary
 #' of forester models.
 #' See https://cran.r-project.org/web/packages/randomForestExplainer/index.html
 #' and https://github.com/ModelOriented/EIX
@@ -9,7 +9,7 @@
 #' @param model a model created with the `train()` function
 #' @param ... other parameters
 #'
-#' @return
+#' @return ggplot2 object
 #' @export
 #'
 #' @examples

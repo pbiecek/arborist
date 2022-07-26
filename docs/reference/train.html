@@ -68,7 +68,7 @@ validation strategy, tested model families and so on.</p>
   <span class="va">data</span>,
   <span class="va">y</span>,
   type <span class="op">=</span> <span class="st">"guess"</span>,
-  engine <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ranger"</span>, <span class="st">"xgboost"</span>, <span class="st">"lightgbm"</span><span class="op">)</span>,
+  engine <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"randomForest"</span>, <span class="st">"ranger"</span>, <span class="st">"xgboost"</span>, <span class="st">"lightgbm"</span><span class="op">)</span>,
   loss <span class="op">=</span> <span class="st">"default"</span>,
   validation <span class="op">=</span> <span class="st">"default"</span>,
   tuning <span class="op">=</span> <span class="st">"default"</span>,
@@ -134,14 +134,34 @@ If `random search` then random search is performed.</p></dd>
     <h2>Value</h2>
     
 
-
+<p>an DALEX explainer (or set of explainers if keep=TRUE)</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeloriented.github.io/DALEX/" class="external-link">DALEX</a></span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">train</span><span class="op">(</span><span class="va">titanic_imputed</span>, <span class="st">"survived"</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "This is only an architecture"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The response has five or fewer unique values.  Are you sure you want to do regression?</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  Random Forest </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  2207  rows  7  cols </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  2207  values </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  yhat.randomForest  will be used ( <span style="color: #BBBB00;"> default </span> )</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predicted values  :  No value for predict function target column. ( <span style="color: #BBBB00;"> default </span> )</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package randomForest , ver. 4.7.1.1 , task regression ( <span style="color: #BBBB00;"> default </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predicted values  :  numerical, min =  0.0114365 , mean =  0.322281 , max =  0.9927917  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; residual function :  difference between y and yhat ( <span style="color: #BBBB00;"> default </span> )</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; residuals         :  numerical, min =  -0.7763465 , mean =  -0.0001242632 , max =  0.9059593  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;"> A new explainer has been created! </span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  randomForest(formula = as.formula(paste0(y, " ~ .")), data = data) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                Type of random forest: regression</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      Number of trees: 500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> No. of variables tried at each split: 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Mean of squared residuals: 0.1402683</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     % Var explained: 35.77</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

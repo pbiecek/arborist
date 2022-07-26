@@ -6,7 +6,7 @@
 #' @param model a model created with the `train()` function
 #' @param ... other parameters
 #'
-#' @return
+#' @return set of ggplot objects that summarise the model
 #' @export
 #'
 #' @examples
@@ -17,5 +17,5 @@
 #'     forester::extract()
 #'
 extract <- function(model, ...) {
-  print("This is only a placeholder")
+  print("This is only a placeholder - extract")
 }

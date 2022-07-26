@@ -12,7 +12,7 @@ extract(model, ...)
 \item{...}{other parameters}
 }
 \value{
-
+set of ggplot objects that summarise the model
 }
 \description{
 The `extract()` function extracts some useful statistics, like important features

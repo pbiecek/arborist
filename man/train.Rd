@@ -8,7 +8,7 @@ train(
   data,
   y,
   type = "guess",
-  engine = c("ranger", "xgboost", "lightgbm"),
+  engine = c("randomForest", "ranger", "xgboost", "lightgbm"),
   loss = "default",
   validation = "default",
   tuning = "default",
@@ -53,7 +53,7 @@ If `random search` then random search is performed.}
 (`keep = FALSE`, default option)?}
 }
 \value{
-
+an DALEX explainer (or set of explainers if keep=TRUE)
 }
 \description{
 The `train()` is the core function of this package.
