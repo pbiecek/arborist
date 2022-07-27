@@ -33,4 +33,7 @@
   <url>
     <loc>/reference/train_randomForest.html</loc>
   </url>
+  <url>
+    <loc>/reference/train_ranger.html</loc>
+  </url>
 </urlset>

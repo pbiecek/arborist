@@ -67,12 +67,16 @@ validation strategy, tested model families and so on.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">train</span><span class="op">(</span>
   <span class="va">data</span>,
   <span class="va">y</span>,
+  data_test <span class="op">=</span> <span class="cn">NULL</span>,
+  y_test <span class="op">=</span> <span class="cn">NULL</span>,
+  train_test_ratio <span class="op">=</span> <span class="fl">4</span>,
   type <span class="op">=</span> <span class="st">"guess"</span>,
   engine <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"randomForest"</span>, <span class="st">"ranger"</span>, <span class="st">"xgboost"</span>, <span class="st">"lightgbm"</span><span class="op">)</span>,
   loss <span class="op">=</span> <span class="st">"default"</span>,
   validation <span class="op">=</span> <span class="st">"default"</span>,
   tuning <span class="op">=</span> <span class="st">"default"</span>,
-  keep <span class="op">=</span> <span class="cn">FALSE</span>
+  keep <span class="op">=</span> <span class="cn">FALSE</span>,
+  verbose <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -89,6 +93,18 @@ on all columns in the `data`</p></dd>
 (1) a vector of the same number of observations as `data` or
 (2) a character name of variable in the `data` that contains
 the target variable</p></dd>
+
+
+<dt>data_test</dt>
+<dd><p>data that will be used for evaluation</p></dd>
+
+
+<dt>y_test</dt>
+<dd><p>data that will be used for evaluation</p></dd>
+
+
+<dt>train_test_ratio</dt>
+<dd><p>if data_test is not provided then the orifinal data will be divided in train/test</p></dd>
 
 
 <dt>type</dt>
@@ -129,6 +145,10 @@ If `random search` then random search is performed.</p></dd>
 <dd><p>shall all models be returned (`keep = TRUE`) or only the best one
 (`keep = FALSE`, default option)?</p></dd>
 
+
+<dt>verbose</dt>
+<dd><p>logical. If TRUE (default) then diagnostic messages will be printed</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -141,27 +161,20 @@ If `random search` then random search is performed.</p></dd>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeloriented.github.io/DALEX/" class="external-link">DALEX</a></span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">train</span><span class="op">(</span><span class="va">titanic_imputed</span>, <span class="st">"survived"</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The response has five or fewer unique values.  Are you sure you want to do regression?</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  Random Forest </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  2207  rows  7  cols </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  2207  values </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  yhat.randomForest  will be used ( <span style="color: #BBBB00;"> default </span> )</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predicted values  :  No value for predict function target column. ( <span style="color: #BBBB00;"> default </span> )</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package randomForest , ver. 4.7.1.1 , task regression ( <span style="color: #BBBB00;"> default </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predicted values  :  numerical, min =  0.0114365 , mean =  0.322281 , max =  0.9927917  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; residual function :  difference between y and yhat ( <span style="color: #BBBB00;"> default </span> )</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; residuals         :  numerical, min =  -0.7763465 , mean =  -0.0001242632 , max =  0.9059593  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;"> A new explainer has been created! </span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  randomForest(formula = as.formula(paste0(y, " ~ .")), data = data) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                Type of random forest: regression</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      Number of trees: 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> No. of variables tried at each split: 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Mean of squared residuals: 0.1402683</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     % Var explained: 35.77</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -&gt; type set to  classification </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -&gt; leaderboard </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Random Forest Ranger   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> recall    0.5777778     0.5259259</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> precision 0.78          0.8255814</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f1        0.6638298     0.6425339</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> accuracy  0.8208617     0.8208617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> auc       0.8063181     0.8409102</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model label:  Ranger </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model class:  foresterRanger,forester,ranger </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data head  :</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   gender age class  embarked fare sibsp parch</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   male  30   2nd Cherbourg   24     1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 female  28   2nd Cherbourg   24     1     0</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

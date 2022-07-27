@@ -67,6 +67,12 @@ train <- function(data,
       data_test$y <- y_test
   } #now we can be sure that y has name of the variable and data consists this name
 
+  # TEST: is type set correctly
+  if (type == "guess") {
+    type = ifelse(length(unique(data[,y])) <= 2, "classification", "regression")
+    cat(" -> type set to ", type, "\n")
+  }
+
   # TEST: do we have validation data?
   if (is.null(data_test)) {
     n       <- nrow(data)
@@ -80,22 +86,31 @@ train <- function(data,
 
   # PROCESS: create models
   list_of_models <- list()
+  model_id <- 0
   if ("randomForest" %in% engine) {
-    list_of_models <- c(list_of_models,
-                        train_randomForest(data, y = y, data_test = data_test, loss = "default", validation = "default", tuning = "default", verbose = verbose))
+    model_id <- model_id+1
+    list_of_models[[model_id]] <- train_randomForest(data, y = y, data_test = data_test, loss = "default", validation = "default", tuning = "default", verbose = verbose, type = type)
   }
   if ("ranger" %in% engine) {
-    list_of_models <- c(list_of_models,
-                        train_ranger(data, y = y, data_test = data_test, loss = "default", validation = "default", tuning = "default", verbose = verbose))
+    model_id <- model_id+1
+    list_of_models[[model_id]] <- train_ranger(data, y = y, data_test = data_test, loss = "default", validation = "default", tuning = "default", verbose = verbose, type = type)
   }
 
   # PROCESS: evaluate performance for all models
   performance_of_models <- lapply(list_of_models, DALEX::model_performance)
+  leaderboard <- sapply(performance_of_models, function(x) x$measures)
+  colnames(leaderboard) <- sapply(list_of_models, function(x) x$label)
 
+  cat(" -> leaderboard \n")
+  print(leaderboard)
 
 
   # do validation and select the best model
-  best <- 1
+  if (type == "classification") {
+    best <- which.max(leaderboard["auc",])
+  } else {
+    best <- which.max(leaderboard["mse",])
+  }
 
   best_model <- list_of_models[[best]]
   if (keep == TRUE) {
@@ -131,10 +146,6 @@ train <- function(data,
 #' @importFrom DALEX explain
 #' @return an DALEX explainer
 #' @export
-#' @examples
-#' library(DALEX)
-#' train_randomForest(titanic_imputed, "survived")
-#'
 train_randomForest <- function(data,
        y,
        data_test,
@@ -148,8 +159,13 @@ train_randomForest <- function(data,
   stopifnot(validation == "default") # "Currently only default validation is implemented"
   stopifnot(loss == "default") # "Currently only default loss is implemented"
 
-  model <- randomForest::randomForest(as.formula(paste0(y, " ~ .")),
-        data = data)
+  if (type == "classification") {
+    formula <- as.formula(paste0("factor(", y, ") ~ ."))
+  } else {
+    formula <- as.formula(paste0(y, " ~ ."))
+  }
+
+  model <- randomForest::randomForest(formula, data = data)
   class(model) <- c("foresterRandomForest", "forester", class(model))
   # get an explainer
   DALEX::explain(model,
@@ -190,8 +206,13 @@ train_ranger <- function(data,
   stopifnot(validation == "default") # "Currently only default validation is implemented"
   stopifnot(loss == "default") # "Currently only default loss is implemented"
 
-  model <- ranger::ranger(as.formula(paste0(y, " ~ .")),
-                                      data = data)
+  if (type == "classification") {
+    formula <- as.formula(paste0("factor(", y, ") ~ ."))
+  } else {
+    formula <- as.formula(paste0(y, " ~ ."))
+  }
+
+  model <- ranger::ranger(formula, data = data, classification = type == "classification", probability =  TRUE)
   class(model) <- c("foresterRanger", "forester", class(model))
   # get an explainer
   DALEX::explain(model,

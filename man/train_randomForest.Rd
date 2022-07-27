@@ -49,8 +49,3 @@ an DALEX explainer
 \description{
 Train a simple randomForest model
 }
-\examples{
-library(DALEX)
-train_randomForest(titanic_imputed, "survived")
-
-}
