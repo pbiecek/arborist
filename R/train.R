@@ -113,6 +113,7 @@ train <- function(data,
   }
 
   best_model <- list_of_models[[best]]
+  best_model$leaderboard <- leaderboard
   if (keep == TRUE) {
     attr(best_model, "all_models") <- list_of_models
   }

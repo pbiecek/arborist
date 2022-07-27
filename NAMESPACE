@@ -2,7 +2,6 @@
 
 S3method(print,forester)
 export(extract)
-export(plot)
 export(train)
 export(train_randomForest)
 export(train_ranger)

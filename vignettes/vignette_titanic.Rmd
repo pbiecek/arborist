@@ -1,0 +1,134 @@
+---
+title: "Survival on the RMS Titanic with Forester"
+author: "Przemyslaw Biecek"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_document
+vignette: >
+  %\VignetteIndexEntry{Survival on the RMS Titanic}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = FALSE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+# Data for Titanic survival
+
+Let's see an example for `DALEX` package for classification models for the survival problem for Titanic dataset.
+Here we are using a dataset `titanic` available in the `DALEX` package. Note that this data was copied from the `stablelearner` package.
+
+```{r}
+library("DALEX")
+head(titanic_imputed)
+```
+
+# Simple model with forester
+
+Let's use the `forester` to train the model.
+
+```{r}
+# prepare model
+library("forester")
+model_fr <- train(titanic_imputed, "survived")
+model_fr
+```
+
+Leaderboard
+
+```{r}
+model_fr$leaderboard
+```
+
+# Model performance
+
+```{r}
+model_performance(model_fr)
+```
+
+# Variable importance plots
+
+Use the `variable_importance()` explainer to present the importance of particular features. Note that `type = "difference"` normalizes dropouts, and now they all start in 0.
+
+```{r}
+vi_rf <- model_parts(model_fr)
+head(vi_rf)
+plot(vi_rf)
+```
+
+# Variable effects
+
+As we see the most important feature is `Sex`. Next three important features are `Pclass`, `Age` and `Fare`. Let's see the link between model response and these features.
+
+Such univariate relation can be calculated with `variable_effect()`.
+
+## Age
+
+Kids 5 years old and younger have a much higher survival probability.
+
+```{r}
+vr_age  <- model_profile(model_fr, variables =  "age")
+head(vr_age)
+plot(vr_age)
+```
+
+## Passenger class
+
+Passengers in the first-class have much higher survival probability.
+
+```{r}
+vr_class  <- model_profile(model_fr, variables =  "class")
+plot(vr_class)
+```
+
+## Fare
+
+Very cheap tickets are linked with lower chances.
+
+```{r}
+vr_fare  <- variable_profile(model_fr, variables =  "fare")
+plot(vr_fare)
+```
+
+## Embarked
+
+Passengers that embarked from C have the highest survival.
+
+```{r}
+vr_embarked  <- model_profile(model_fr, variables =  "embarked")
+plot(vr_embarked)
+```
+
+
+# Instance level explanations
+
+Let's see break-down explanation for model predictions for 8 years old male from 1st class that embarked from port C.
+
+```{r}
+new_passanger <- data.frame(
+  class = factor("1st", levels = c("1st", "2nd", "3rd", "deck crew", "engineering crew", "restaurant staff", "victualling crew")),
+  gender = factor("male", levels = c("female", "male")),
+  age = 8,
+  sibsp = 0,
+  parch = 0,
+  fare = 72,
+  embarked = factor("Southampton", levels = c("Belfast", "Cherbourg", "Queenstown", "Southampton"))
+)
+
+sp_rf <- predict_parts(model_fr, new_passanger)
+plot(sp_rf)
+```
+
+It looks like the most important feature for this passenger is `age` and `sex`. After all his odds for survival are higher than for the average passenger. Mainly because of the young age and despite being a male.
+
+
+# Session info
+
+```{r}
+sessionInfo()
+```
