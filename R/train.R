@@ -12,6 +12,9 @@
 #' (1) a vector of the same number of observations as `data` or
 #' (2) a character name of variable in the `data` that contains
 #' the target variable
+#' @param data_test data that will be used for evaluation
+#' @param y_test data that will be used for evaluation
+#' @param train_test_ratio if data_test is not provided then the orifinal data will be divided in train/test
 #' @param type a character, one of `classification`/`regression`/`guess`.
 #' sets the type of the task. If `guess` (the default option) then
 #' forester will figure out `type` based on the number of unique values
@@ -33,6 +36,7 @@
 #' If `random search` then random search is performed.
 #' @param keep shall all models be returned (`keep = TRUE`) or only the best one
 #' (`keep = FALSE`, default option)?
+#' @param verbose logical. If TRUE (default) then diagnostic messages will be printed
 #'
 #' @return an DALEX explainer (or set of explainers if keep=TRUE)
 #' @export
@@ -43,19 +47,52 @@
 #'
 train <- function(data,
                   y,
+                  data_test = NULL,
+                  y_test = NULL,
+                  train_test_ratio = 4,
                   type = "guess",
                   engine = c("randomForest", "ranger", "xgboost", "lightgbm"),
                   loss = "default",
                   validation = "default",
                   tuning = "default",
-                  keep = FALSE) {
-  list_of_models <- list()
+                  keep = FALSE,
+                  verbose = FALSE) {
+  stopifnot(tuning %in% c("default", "portfolio"))
 
-  # add random forest models
+  # TEST: is y a name of a variable?
+  if (!is.character(y) && length(y)>1) { # vector not character with name
+    data$y <- y      # TODO: one should check if `y` was not a variable in this dataset
+    y <- "y"
+    if (!is.null(data_test))
+      data_test$y <- y_test
+  } #now we can be sure that y has name of the variable and data consists this name
+
+  # TEST: do we have validation data?
+  if (is.null(data_test)) {
+    n       <- nrow(data)
+    n_train <- round(n*train_test_ratio/(train_test_ratio+1))
+    n_test  <- n - n_train
+    permut  <- sample(n)
+    data_test <- data[-permut[1:n_train], ]
+    data      <- data[permut[1:n_train], ]
+  }
+
+
+  # PROCESS: create models
+  list_of_models <- list()
   if ("randomForest" %in% engine) {
     list_of_models <- c(list_of_models,
-                        train_randomForest(data, y, loss = "default", validation = "default", tuning = "default"))
+                        train_randomForest(data, y = y, data_test = data_test, loss = "default", validation = "default", tuning = "default", verbose = verbose))
   }
+  if ("ranger" %in% engine) {
+    list_of_models <- c(list_of_models,
+                        train_ranger(data, y = y, data_test = data_test, loss = "default", validation = "default", tuning = "default", verbose = verbose))
+  }
+
+  # PROCESS: evaluate performance for all models
+  performance_of_models <- lapply(list_of_models, DALEX::model_performance)
+
+
 
   # do validation and select the best model
   best <- 1
@@ -79,6 +116,7 @@ train <- function(data,
 #' (1) a vector of the same number of observations as `data` or
 #' (2) a character name of variable in the `data` that contains
 #' the target variable
+#' @param data_test data for model validation
 #' @param type a character, one of `classification`/`regression`/`guess`.
 #' sets the type of the task. If `guess` (the default option) then
 #' forester will figure out `type` based on the number of unique values
@@ -87,6 +125,7 @@ train <- function(data,
 #' @param validation see `train` function
 #' @param tuning see `train` function
 #' @param label label for the model
+#' @param verbose see `train` function
 #' @importFrom stats as.formula
 #' @importFrom randomForest randomForest
 #' @importFrom DALEX explain
@@ -98,28 +137,66 @@ train <- function(data,
 #'
 train_randomForest <- function(data,
        y,
+       data_test,
        type = "guess",
        loss = "default",
        validation = "default",
        tuning = "default",
-       label = "Random Forest") {
+       label = "Random Forest",
+       verbose = FALSE) {
   # check if we can do the work
   stopifnot(validation == "default") # "Currently only default validation is implemented"
   stopifnot(loss == "default") # "Currently only default loss is implemented"
-  stopifnot(tuning == "default") # "Currently only default selection of hyperparameters is implemented"
-
-  # train a randomForest model
-  if (!is.character(y) && length(y)>1) { # vector not character with name
-        data$y <- y      # TODO: one should check if `y` was not a variable in this dataset
-        y <- "y"
-  } #now we can be sure that y has name of the variable and data consists this name
 
   model <- randomForest::randomForest(as.formula(paste0(y, " ~ .")),
         data = data)
   class(model) <- c("foresterRandomForest", "forester", class(model))
   # get an explainer
   DALEX::explain(model,
-        data = data[,setdiff(colnames(data), y), drop = FALSE], # without y variable
-        y = data[,y],
-        label = label)
+         data = data_test[,setdiff(colnames(data_test), y), drop = FALSE], # without y variable
+         y = data_test[,y],
+         label = label,
+         verbose = verbose)
+}
+
+
+#' Train a simple ranger model
+#'
+#' @param data see the `train` function
+#' @param y see the `train` function
+#' @param data_test see the `train` function
+#' @param type a character, one of `classification`/`regression`/`guess`.
+#' sets the type of the task. If `guess` (the default option) then
+#' forester will figure out `type` based on the number of unique values
+#' in the `y` variable
+#' @param loss see `train` function
+#' @param validation see `train` function
+#' @param tuning see `train` function
+#' @param label label for the model
+#' @param verbose see `train` function
+#' @importFrom ranger ranger
+#' @return an DALEX explainer
+#' @export
+train_ranger <- function(data,
+         y,
+         data_test,
+         type = "guess",
+         loss = "default",
+         validation = "default",
+         tuning = "default",
+         label = "Ranger",
+         verbose = FALSE) {
+  # check if we can do the work
+  stopifnot(validation == "default") # "Currently only default validation is implemented"
+  stopifnot(loss == "default") # "Currently only default loss is implemented"
+
+  model <- ranger::ranger(as.formula(paste0(y, " ~ .")),
+                                      data = data)
+  class(model) <- c("foresterRanger", "forester", class(model))
+  # get an explainer
+  DALEX::explain(model,
+                 data = data_test[,setdiff(colnames(data_test), y), drop = FALSE], # without y variable
+                 y = data_test[,y],
+                 label = label,
+                 verbose = verbose)
 }

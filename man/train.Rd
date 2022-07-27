@@ -7,12 +7,16 @@
 train(
   data,
   y,
+  data_test = NULL,
+  y_test = NULL,
+  train_test_ratio = 4,
   type = "guess",
   engine = c("randomForest", "ranger", "xgboost", "lightgbm"),
   loss = "default",
   validation = "default",
   tuning = "default",
-  keep = FALSE
+  keep = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -24,6 +28,12 @@ on all columns in the `data`}
 (1) a vector of the same number of observations as `data` or
 (2) a character name of variable in the `data` that contains
 the target variable}
+
+\item{data_test}{data that will be used for evaluation}
+
+\item{y_test}{data that will be used for evaluation}
+
+\item{train_test_ratio}{if data_test is not provided then the orifinal data will be divided in train/test}
 
 \item{type}{a character, one of `classification`/`regression`/`guess`.
 sets the type of the task. If `guess` (the default option) then
@@ -51,6 +61,8 @@ If `random search` then random search is performed.}
 
 \item{keep}{shall all models be returned (`keep = TRUE`) or only the best one
 (`keep = FALSE`, default option)?}
+
+\item{verbose}{logical. If TRUE (default) then diagnostic messages will be printed}
 }
 \value{
 an DALEX explainer (or set of explainers if keep=TRUE)
