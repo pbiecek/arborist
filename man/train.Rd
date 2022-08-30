@@ -16,7 +16,8 @@ train(
   validation = "default",
   tuning = "default",
   keep = FALSE,
-  verbose = FALSE
+  verbose = FALSE,
+  ...
 )
 }
 \arguments{
@@ -63,6 +64,8 @@ If `random search` then random search is performed.}
 (`keep = FALSE`, default option)?}
 
 \item{verbose}{logical. If TRUE (default) then diagnostic messages will be printed}
+
+\item{...}{other parameters that will be passed further (currently to randomForest)}
 }
 \value{
 an DALEX explainer (or set of explainers if keep=TRUE)

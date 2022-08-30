@@ -13,7 +13,8 @@ train_randomForest(
   validation = "default",
   tuning = "default",
   label = "Random Forest",
-  verbose = FALSE
+  verbose = FALSE,
+  ...
 )
 }
 \arguments{

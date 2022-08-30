@@ -47,7 +47,7 @@ str(embeddings_binary)
 
 And let's see PCA transformation for these embeddings.
 
-```{r embeddings2}
+```{r embeddings2, message=FALSE, echo=FALSE}
 library("ggplot2")
 
 pca_embed <- prcomp(embeddings_binary)
@@ -58,7 +58,7 @@ ggplot(df, aes(PC1, PC2, color = val)) +
     DALEX::theme_ema()
 ```
 
-## Binary shap
+## Shap embeddings
 
 Currently we are using `treeshap` package and it does not handle correctly categorical variables.
 So we use only numerical ones.
@@ -74,7 +74,7 @@ str(embeddings_shap$shaps)
 
 And let's see PCA transformation for these embeddings.
 
-```{r embeddings4, message=FALSE}
+```{r embeddings4, message=FALSE, echo=FALSE}
 pca_embed <- prcomp(embeddings_shap$shaps)
 df <- as.data.frame(pca_embed$x)
 df$val <- titanic_imputed$survived
