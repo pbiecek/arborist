@@ -16,10 +16,19 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/embed.html</loc>
+  </url>
+  <url>
     <loc>/reference/explain.html</loc>
   </url>
   <url>
     <loc>/reference/extract.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_embedding_forest_binary.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_embedding_tree_binary.html</loc>
   </url>
   <url>
     <loc>/reference/hello.html</loc>
