@@ -86,7 +86,8 @@ validation strategy, tested model families and so on.</p>
   validation <span class="op">=</span> <span class="st">"default"</span>,
   tuning <span class="op">=</span> <span class="st">"default"</span>,
   keep <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
+  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
+  <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -159,6 +160,10 @@ If `random search` then random search is performed.</p></dd>
 <dt>verbose</dt>
 <dd><p>logical. If TRUE (default) then diagnostic messages will be printed</p></dd>
 
+
+<dt>...</dt>
+<dd><p>other parameters that will be passed further (currently to randomForest)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -174,17 +179,17 @@ If `random search` then random search is performed.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  -&gt; type set to  classification </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  -&gt; leaderboard </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           Random Forest Ranger   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> recall    0.5442177     0.4353741</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> precision 0.8333333     0.8533333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f1        0.6584362     0.5765766</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> accuracy  0.8117914     0.7868481</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> auc       0.7820237     0.8184668</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> recall    0.5714286     0.5571429</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> precision 0.8510638     0.8863636</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f1        0.6837607     0.6842105</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> accuracy  0.8321995     0.8367347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> auc       0.8139416     0.8418605</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model label:  Ranger </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model class:  foresterRanger,forester,ranger </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data head  :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   gender age class    embarked  fare sibsp parch</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   male  16   3rd Southampton 20.05     1     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   male  30   2nd   Cherbourg 24.00     1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   male  25   3rd Southampton  7.13     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 female  28   2nd   Cherbourg 24.00     1     0</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

@@ -28,6 +28,9 @@
     <loc>/reference/get_embedding_forest_binary.html</loc>
   </url>
   <url>
+    <loc>/reference/get_embedding_forest_shap.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_embedding_tree_binary.html</loc>
   </url>
   <url>

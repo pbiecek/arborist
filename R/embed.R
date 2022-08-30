@@ -26,11 +26,13 @@
 #'
 #' @examples
 #' library("DALEX")
-#' model <- train(titanic_imputed, "survived", engine = "randomForest")
+#' model <- train(titanic_imputed, "survived", engine = "randomForest", ntree = 25)
 #' embeddings_binary <- embed(titanic_imputed, model, type = "binary")
-#' head(embeddings_binary)
+#' str(embeddings_binary)
+#'
+#' model_fr <- train(small_titanic, "survived", engine = "randomForest", type = "regression")
 #' embeddings_shap   <- embed(titanic_imputed, model, type = "shap")
-#' head(embeddings_shap)
+#' str(embeddings_shap)
 #'
 embed <- function(data,
                   model,

@@ -36,18 +36,19 @@ Two types of embeddings are implemented in the `arborist` package and we will lo
 
 ## Binary embeddings
 
-```{r embeddings1}
+```{r embeddings1, results='hide', message=FALSE}
 library("arborist")
 
 model_fr <- train(titanic_imputed, "survived", engine = "randomForest", ntree = 25)
 
 embeddings_binary <- arborist::embed(titanic_imputed, model_fr, type = "binary")
-str(embeddings_binary)
 ```
 
 And let's see PCA transformation for these embeddings.
 
-```{r embeddings2, message=FALSE, echo=FALSE}
+```{r embeddings2, message=FALSE}
+str(embeddings_binary)
+
 library("ggplot2")
 
 pca_embed <- prcomp(embeddings_binary)
@@ -63,18 +64,19 @@ ggplot(df, aes(PC1, PC2, color = val)) +
 Currently we are using `treeshap` package and it does not handle correctly categorical variables.
 So we use only numerical ones.
 
-```{r embeddings3, message=FALSE}
+```{r embeddings3, message=FALSE, results='hide'}
 small_titanic <- titanic_imputed[,c(2,5,6,7,8)]
 
 model_fr <- train(small_titanic, "survived", engine = "randomForest", type = "regression")
 
 embeddings_shap   <- arborist::embed(small_titanic, model_fr, type = "shap")
-str(embeddings_shap$shaps)
 ```
 
 And let's see PCA transformation for these embeddings.
 
-```{r embeddings4, message=FALSE, echo=FALSE}
+```{r embeddings4, message=FALSE}
+str(embeddings_shap$shaps)
+
 pca_embed <- prcomp(embeddings_shap$shaps)
 df <- as.data.frame(pca_embed$x)
 df$val <- titanic_imputed$survived
