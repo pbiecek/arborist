@@ -1,0 +1,113 @@
+---
+title: "Value of players based on Fifa 22"
+author: "Przemyslaw Biecek"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_document
+vignette: >
+  %\VignetteIndexEntry{Value of players based on Fifa 22}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = FALSE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+# Data from Fifa 22
+
+Let's see an example for regression/pricing model.
+Here we are using a dataset `fifa22` available in the `arborist` package. 
+
+```{r}
+library("arborist")
+fifa <- fifa22[!duplicated(fifa22$short_name),]
+rownames(fifa) <- fifa$short_name
+fifa <- na.omit(fifa[,c(5,7,18:57)])
+fifa$value_eur <- log10(fifa$value_eur)
+attr(fifa, "na.action") <- NULL
+
+head(fifa)
+```
+
+# Simple model with arborist
+
+Let's use the `arborist` to train the model.
+
+```{r}
+# prepare model
+# model_fifa <- train(fifa, "value_eur")
+library(randomForest)
+model_rf <- randomForest(value_eur ~ ., data = fifa, ntree = 50)
+library(DALEX)
+set.seed(1313)
+fifa100 <- fifa[sample(1:nrow(fifa), 250),]
+model_ex <- explain(model_rf, fifa100, fifa100$value_eur)
+```
+
+# Model performance
+
+```{r}
+model_performance(model_ex)
+```
+
+# Variable importance plots
+
+Use the `variable_importance()` explainer to present the importance of particular features. Note that `type = "difference"` normalizes dropouts, and now they all start in 0.
+
+```{r}
+vi_rf <- model_parts(model_ex)
+tail(vi_rf)
+plot(vi_rf)
+```
+
+# Variable effects
+
+As we see the most important feature is `age`. Next three important features are `skill_ball_control`, `movement_reactions`, `dribbling` and `defending`. Let's see the link between model response and these features.
+
+Such univariate relation can be calculated with `variable_effect()`.
+
+## Age
+
+```{r}
+vr_age  <- model_profile(model_ex, variables =  "age")
+plot(vr_age)
+```
+
+## All others
+
+```{r}
+vr_age  <- model_profile(model_ex, 
+                  variables =  c("age", "skill_ball_control",  "movement_reactions", 
+                                 "dribbling", "defending"))
+plot(vr_age)
+```
+
+# Instance level explanations
+
+Let's see break-down explanation for model predictions for Robert Lewandowski.
+
+```{r}
+rl9 <- fifa["R. Lewandowski", ]
+
+rl9_pp <- predict_parts(model_ex, rl9)
+plot(rl9_pp)
+
+rl9_sh <- predict_parts(model_ex, rl9, type = "shap")
+plot(rl9_sh)
+
+vr <- c("age", "skill_ball_control",  "movement_reactions", "dribbling", "defending")
+rl9_age  <- predict_profile(model_ex, rl9, variables =  vr)
+plot(rl9_age, variables =  vr)
+```
+
+
+# Session info
+
+```{r}
+sessionInfo()
+```

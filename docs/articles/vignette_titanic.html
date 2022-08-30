@@ -61,6 +61,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/vignette_fifa22.html">Value of players based on Fifa 22</a>
+    </li>
+    <li>
       <a href="../articles/vignette_titanic.html">Survival on the RMS Titanic with arborist</a>
     </li>
   </ul>
@@ -136,7 +139,7 @@ package and we will look at them below.</p>
 <p>And let’s see PCA transformation for these embeddings.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">embeddings_binary</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">#&gt;  num [1:2207, 1:25] 231 231 239 140 129 ...</span></code></pre>
+<pre><code><span class="co">#&gt;  num [1:2207, 1:25] 113 126 126 34 34 ...</span></code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span>
 
@@ -164,10 +167,10 @@ ones.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">embeddings_shap</span><span class="op">$</span><span class="va">shaps</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">#&gt; 'data.frame':    2207 obs. of  5 variables:</span>
-<span class="co">#&gt;  $ age     : num  -0.02756 0.08143 0.00439 -0.06779 0.02856 ...</span>
-<span class="co">#&gt;  $ fare    : num  -0.05347 -0.00372 -0.03978 -0.03038 -0.02904 ...</span>
-<span class="co">#&gt;  $ sibsp   : num  -0.00155 0.0478 0.01207 0.00418 0.0044 ...</span>
-<span class="co">#&gt;  $ parch   : num  -0.00896 0.09298 0.13238 0.10452 -0.01659 ...</span>
+<span class="co">#&gt;  $ age     : num  -0.02277 0.05696 0.00213 -0.03122 0.03899 ...</span>
+<span class="co">#&gt;  $ fare    : num  -0.0522 0.0215 -0.0232 0.0108 -0.0315 ...</span>
+<span class="co">#&gt;  $ sibsp   : num  -0.000859 0.047404 0.013508 0.031692 0.002739 ...</span>
+<span class="co">#&gt;  $ parch   : num  -0.00693 0.08956 0.10166 0.09481 -0.01411 ...</span>
 <span class="co">#&gt;  $ survived: num  0 0 0 0 0 0 0 0 0 0 ...</span></code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pca_embed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="va">embeddings_shap</span><span class="op">$</span><span class="va">shaps</span><span class="op">)</span>
@@ -190,28 +193,28 @@ ones.</p>
 <pre><code><span class="co">#&gt;  -&gt; type set to  classification </span>
 <span class="co">#&gt;  -&gt; leaderboard </span>
 <span class="co">#&gt;           Random Forest Ranger   </span>
-<span class="co">#&gt; recall    0.6164384     0.5821918</span>
-<span class="co">#&gt; precision 0.8653846     0.8673469</span>
-<span class="co">#&gt; f1        0.72          0.6967213</span>
-<span class="co">#&gt; accuracy  0.8412698     0.8321995</span>
-<span class="co">#&gt; auc       0.796169      0.832482</span></code></pre>
+<span class="co">#&gt; recall    0.5174825     0.4965035</span>
+<span class="co">#&gt; precision 0.8314607     0.7888889</span>
+<span class="co">#&gt; f1        0.637931      0.6094421</span>
+<span class="co">#&gt; accuracy  0.8095238     0.7936508</span>
+<span class="co">#&gt; auc       0.8006172     0.8267353</span></code></pre>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_fr</span></code></pre></div>
 <pre><code><span class="co">#&gt; Model label:  Ranger </span>
 <span class="co">#&gt; Model class:  foresterRanger,forester,ranger </span>
 <span class="co">#&gt; Data head  :</span>
-<span class="co">#&gt;    gender age class    embarked    fare sibsp parch</span>
-<span class="co">#&gt; 3    male  16   3rd Southampton 20.0500     1     1</span>
-<span class="co">#&gt; 10   male  20   3rd Southampton  7.1806     0     0</span></code></pre>
+<span class="co">#&gt;   gender age class  embarked    fare sibsp parch</span>
+<span class="co">#&gt; 7   male  30   2nd Cherbourg 24.0000     1     0</span>
+<span class="co">#&gt; 9   male  27   3rd Cherbourg 18.1509     0     0</span></code></pre>
 <p>Leaderboard</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_fr</span><span class="op">$</span><span class="va">leaderboard</span></code></pre></div>
 <pre><code><span class="co">#&gt;           Random Forest Ranger   </span>
-<span class="co">#&gt; recall    0.6164384     0.5821918</span>
-<span class="co">#&gt; precision 0.8653846     0.8673469</span>
-<span class="co">#&gt; f1        0.72          0.6967213</span>
-<span class="co">#&gt; accuracy  0.8412698     0.8321995</span>
-<span class="co">#&gt; auc       0.796169      0.832482</span></code></pre>
+<span class="co">#&gt; recall    0.5174825     0.4965035</span>
+<span class="co">#&gt; precision 0.8314607     0.7888889</span>
+<span class="co">#&gt; f1        0.637931      0.6094421</span>
+<span class="co">#&gt; accuracy  0.8095238     0.7936508</span>
+<span class="co">#&gt; auc       0.8006172     0.8267353</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="model-performance">Model performance<a class="anchor" aria-label="anchor" href="#model-performance"></a>
@@ -219,17 +222,17 @@ ones.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://modeloriented.github.io/DALEX/reference/model_performance.html" class="external-link">model_performance</a></span><span class="op">(</span><span class="va">model_fr</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">#&gt; Measures for:  classification</span>
-<span class="co">#&gt; recall     : 0.5821918 </span>
-<span class="co">#&gt; precision  : 0.8673469 </span>
-<span class="co">#&gt; f1         : 0.6967213 </span>
-<span class="co">#&gt; accuracy   : 0.8321995 </span>
-<span class="co">#&gt; auc        : 0.832482</span>
+<span class="co">#&gt; recall     : 0.4965035 </span>
+<span class="co">#&gt; precision  : 0.7888889 </span>
+<span class="co">#&gt; f1         : 0.6094421 </span>
+<span class="co">#&gt; accuracy   : 0.7936508 </span>
+<span class="co">#&gt; auc        : 0.8267353</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Residuals:</span>
 <span class="co">#&gt;          0%         10%         20%         30%         40%         50% </span>
-<span class="co">#&gt; -0.88759087 -0.25769721 -0.22300895 -0.20804548 -0.18151999 -0.15415377 </span>
+<span class="co">#&gt; -0.84432436 -0.24395405 -0.21906663 -0.19583866 -0.17271682 -0.14452220 </span>
 <span class="co">#&gt;         60%         70%         80%         90%        100% </span>
-<span class="co">#&gt; -0.10633068  0.05356576  0.30380823  0.64663740  0.93450860</span></code></pre>
+<span class="co">#&gt; -0.10133798  0.03354731  0.31001183  0.76032579  0.92773855</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="variable-importance-plots">Variable importance plots<a class="anchor" aria-label="anchor" href="#variable-importance-plots"></a>
@@ -242,12 +245,12 @@ start in 0.</p>
 <code class="sourceCode R"><span class="va">vi_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://modeloriented.github.io/DALEX/reference/model_parts.html" class="external-link">model_parts</a></span><span class="op">(</span><span class="va">model_fr</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">vi_rf</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">#&gt;       variable mean_dropout_loss  label</span>
-<span class="co">#&gt; 1 _full_model_         0.1675180 Ranger</span>
-<span class="co">#&gt; 2        parch         0.1647550 Ranger</span>
-<span class="co">#&gt; 3     embarked         0.1672313 Ranger</span>
-<span class="co">#&gt; 4        sibsp         0.1720827 Ranger</span>
-<span class="co">#&gt; 5          age         0.1806153 Ranger</span>
-<span class="co">#&gt; 6         fare         0.1901602 Ranger</span></code></pre>
+<span class="co">#&gt; 1 _full_model_         0.1732647 Ranger</span>
+<span class="co">#&gt; 2        sibsp         0.1787147 Ranger</span>
+<span class="co">#&gt; 3     embarked         0.1812479 Ranger</span>
+<span class="co">#&gt; 4        parch         0.1814392 Ranger</span>
+<span class="co">#&gt; 5         fare         0.2135812 Ranger</span>
+<span class="co">#&gt; 6          age         0.2197376 Ranger</span></code></pre>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">vi_rf</span><span class="op">)</span></code></pre></div>
 <p><img src="vignette_titanic_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
@@ -271,47 +274,47 @@ probability.</p>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">vr_age</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">#&gt; $cp_profiles</span>
 <span class="co">#&gt; Top profiles    : </span>
-<span class="co">#&gt;        gender  age     class    embarked fare sibsp parch    _yhat_ _vname_</span>
-<span class="co">#&gt; 1597     male  1.0 deck crew Southampton    0     0     0 0.5291734     age</span>
-<span class="co">#&gt; 1597.1   male  4.0 deck crew Southampton    0     0     0 0.5290459     age</span>
-<span class="co">#&gt; 1597.2   male  5.0 deck crew Southampton    0     0     0 0.5260703     age</span>
-<span class="co">#&gt; 1597.3   male  7.2 deck crew Southampton    0     0     0 0.5099041     age</span>
-<span class="co">#&gt; 1597.4   male 11.2 deck crew Southampton    0     0     0 0.4309323     age</span>
-<span class="co">#&gt; 1597.5   male 14.0 deck crew Southampton    0     0     0 0.3957575     age</span>
-<span class="co">#&gt;        _ids_ _label_</span>
-<span class="co">#&gt; 1597    1597  Ranger</span>
-<span class="co">#&gt; 1597.1  1597  Ranger</span>
-<span class="co">#&gt; 1597.2  1597  Ranger</span>
-<span class="co">#&gt; 1597.3  1597  Ranger</span>
-<span class="co">#&gt; 1597.4  1597  Ranger</span>
-<span class="co">#&gt; 1597.5  1597  Ranger</span>
+<span class="co">#&gt;       gender       age class    embarked   fare sibsp parch    _yhat_ _vname_</span>
+<span class="co">#&gt; 883     male 0.1666667   3rd Southampton 7.1701     0     0 0.4624629     age</span>
+<span class="co">#&gt; 883.1   male 1.4000000   3rd Southampton 7.1701     0     0 0.5380025     age</span>
+<span class="co">#&gt; 883.2   male 2.8000000   3rd Southampton 7.1701     0     0 0.5370720     age</span>
+<span class="co">#&gt; 883.3   male 4.0000000   3rd Southampton 7.1701     0     0 0.5270404     age</span>
+<span class="co">#&gt; 883.4   male 6.6000000   3rd Southampton 7.1701     0     0 0.4912015     age</span>
+<span class="co">#&gt; 883.5   male 8.0000000   3rd Southampton 7.1701     0     0 0.4523832     age</span>
+<span class="co">#&gt;       _ids_ _label_</span>
+<span class="co">#&gt; 883     883  Ranger</span>
+<span class="co">#&gt; 883.1   883  Ranger</span>
+<span class="co">#&gt; 883.2   883  Ranger</span>
+<span class="co">#&gt; 883.3   883  Ranger</span>
+<span class="co">#&gt; 883.4   883  Ranger</span>
+<span class="co">#&gt; 883.5   883  Ranger</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Top observations:</span>
 <span class="co">#&gt;      gender age            class    embarked    fare sibsp parch    _yhat_</span>
-<span class="co">#&gt; 1597   male  27        deck crew Southampton  0.0000     0     0 0.4262889</span>
-<span class="co">#&gt; 11     male  30              3rd Southampton  7.0500     0     0 0.1476194</span>
-<span class="co">#&gt; 1460   male  32 restaurant staff Southampton  0.0000     0     0 0.2013977</span>
-<span class="co">#&gt; 1363   male  33 engineering crew Southampton  0.0000     0     0 0.2198843</span>
-<span class="co">#&gt; 606  female  23              2nd   Cherbourg 13.1510     0     0 0.7883280</span>
-<span class="co">#&gt; 259    male  31              3rd  Queenstown  7.1408     0     0 0.1300329</span>
+<span class="co">#&gt; 883    male  21              3rd Southampton  7.1701     0     0 0.1427030</span>
+<span class="co">#&gt; 1935   male  19 engineering crew Southampton  0.0000     0     0 0.2010459</span>
+<span class="co">#&gt; 13   female  40              3rd Southampton  9.0906     1     0 0.4548980</span>
+<span class="co">#&gt; 2049   male  23 engineering crew Southampton  0.0000     0     0 0.2396742</span>
+<span class="co">#&gt; 907    male   9              3rd Southampton  3.0305     0     1 0.4337135</span>
+<span class="co">#&gt; 71   female  24              1st   Cherbourg 69.0600     0     0 0.9717768</span>
 <span class="co">#&gt;      _label_ _ids_</span>
-<span class="co">#&gt; 1597  Ranger     1</span>
-<span class="co">#&gt; 11    Ranger     2</span>
-<span class="co">#&gt; 1460  Ranger     3</span>
-<span class="co">#&gt; 1363  Ranger     4</span>
-<span class="co">#&gt; 606   Ranger     5</span>
-<span class="co">#&gt; 259   Ranger     6</span>
+<span class="co">#&gt; 883   Ranger     1</span>
+<span class="co">#&gt; 1935  Ranger     2</span>
+<span class="co">#&gt; 13    Ranger     3</span>
+<span class="co">#&gt; 2049  Ranger     4</span>
+<span class="co">#&gt; 907   Ranger     5</span>
+<span class="co">#&gt; 71    Ranger     6</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $agr_profiles</span>
 <span class="co">#&gt; Top profiles    : </span>
-<span class="co">#&gt;   _vname_ _label_  _x_    _yhat_ _ids_</span>
-<span class="co">#&gt; 1     age  Ranger  1.0 0.5724960     0</span>
-<span class="co">#&gt; 2     age  Ranger  4.0 0.5682477     0</span>
-<span class="co">#&gt; 3     age  Ranger  5.0 0.5647407     0</span>
-<span class="co">#&gt; 4     age  Ranger  7.2 0.5486436     0</span>
-<span class="co">#&gt; 5     age  Ranger 11.2 0.4717194     0</span>
-<span class="co">#&gt; 6     age  Ranger 14.0 0.4406533     0</span>
+<span class="co">#&gt;   _vname_ _label_       _x_    _yhat_ _ids_</span>
+<span class="co">#&gt; 1     age  Ranger 0.1666667 0.4855413     0</span>
+<span class="co">#&gt; 2     age  Ranger 1.4000000 0.5343667     0</span>
+<span class="co">#&gt; 3     age  Ranger 2.8000000 0.5339758     0</span>
+<span class="co">#&gt; 4     age  Ranger 4.0000000 0.5280573     0</span>
+<span class="co">#&gt; 5     age  Ranger 6.6000000 0.4956936     0</span>
+<span class="co">#&gt; 6     age  Ranger 8.0000000 0.4684470     0</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $color</span>
 <span class="co">#&gt; [1] "#4378bf"</span></code></pre>

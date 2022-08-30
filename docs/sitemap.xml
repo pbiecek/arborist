@@ -7,6 +7,9 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
+    <loc>/articles/vignette_fifa22.html</loc>
+  </url>
+  <url>
     <loc>/articles/vignette_titanic.html</loc>
   </url>
   <url>
@@ -23,6 +26,9 @@
   </url>
   <url>
     <loc>/reference/extract.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fifa22.html</loc>
   </url>
   <url>
     <loc>/reference/get_embedding_forest_binary.html</loc>
