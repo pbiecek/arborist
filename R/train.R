@@ -37,6 +37,7 @@
 #' @param keep shall all models be returned (`keep = TRUE`) or only the best one
 #' (`keep = FALSE`, default option)?
 #' @param verbose logical. If TRUE (default) then diagnostic messages will be printed
+#' @param ... other parameters that will be passed further (currently to randomForest)
 #'
 #' @return an DALEX explainer (or set of explainers if keep=TRUE)
 #' @export
@@ -56,7 +57,8 @@ train <- function(data,
                   validation = "default",
                   tuning = "default",
                   keep = FALSE,
-                  verbose = FALSE) {
+                  verbose = FALSE,
+                  ...) {
   stopifnot(tuning %in% c("default", "portfolio"))
 
   # TEST: is y a name of a variable?
@@ -89,7 +91,7 @@ train <- function(data,
   model_id <- 0
   if ("randomForest" %in% engine) {
     model_id <- model_id+1
-    list_of_models[[model_id]] <- train_randomForest(data, y = y, data_test = data_test, loss = "default", validation = "default", tuning = "default", verbose = verbose, type = type)
+    list_of_models[[model_id]] <- train_randomForest(data, y = y, data_test = data_test, loss = "default", validation = "default", tuning = "default", verbose = verbose, type = type, ...)
   }
   if ("ranger" %in% engine) {
     model_id <- model_id+1
@@ -155,7 +157,8 @@ train_randomForest <- function(data,
        validation = "default",
        tuning = "default",
        label = "Random Forest",
-       verbose = FALSE) {
+       verbose = FALSE,
+       ...) {
   # check if we can do the work
   stopifnot(validation == "default") # "Currently only default validation is implemented"
   stopifnot(loss == "default") # "Currently only default loss is implemented"
@@ -166,7 +169,7 @@ train_randomForest <- function(data,
     formula <- as.formula(paste0(y, " ~ ."))
   }
 
-  model <- randomForest::randomForest(formula, data = data)
+  model <- randomForest::randomForest(formula, data = data, ...)
   class(model) <- c("foresterRandomForest", "forester", class(model))
   # get an explainer
   DALEX::explain(model,

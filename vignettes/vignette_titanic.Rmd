@@ -1,5 +1,5 @@
 ---
-title: "Survival on the RMS Titanic with Forester"
+title: "Survival on the RMS Titanic with arborist"
 author: "Przemyslaw Biecek"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_document
@@ -28,13 +28,70 @@ library("DALEX")
 head(titanic_imputed)
 ```
 
-# Simple model with forester
+# Embeddings
 
-Let's use the `forester` to train the model.
+Embeddings have gained enormous popularity in modelling with deep network models. It turns out that they can also be calculated for tree-based models!
+
+Two types of embeddings are implemented in the `arborist` package and we will look at them below.
+
+## Binary embeddings
+
+```{r embeddings1}
+library("arborist")
+
+model_fr <- train(titanic_imputed, "survived", engine = "randomForest", ntree = 25)
+
+embeddings_binary <- arborist::embed(titanic_imputed, model_fr, type = "binary")
+str(embeddings_binary)
+```
+
+And let's see PCA transformation for these embeddings.
+
+```{r embeddings2}
+library("ggplot2")
+
+pca_embed <- prcomp(embeddings_binary)
+df <- as.data.frame(pca_embed$x)
+df$val <- titanic_imputed$survived
+ggplot(df, aes(PC1, PC2, color = val)) + 
+    geom_point() +
+    DALEX::theme_ema()
+```
+
+## Binary shap
+
+Currently we are using `treeshap` package and it does not handle correctly categorical variables.
+So we use only numerical ones.
+
+```{r embeddings3, message=FALSE}
+small_titanic <- titanic_imputed[,c(2,5,6,7,8)]
+
+model_fr <- train(small_titanic, "survived", engine = "randomForest", type = "regression")
+
+embeddings_shap   <- arborist::embed(small_titanic, model_fr, type = "shap")
+str(embeddings_shap$shaps)
+```
+
+And let's see PCA transformation for these embeddings.
+
+```{r embeddings4, message=FALSE}
+pca_embed <- prcomp(embeddings_shap$shaps)
+df <- as.data.frame(pca_embed$x)
+df$val <- titanic_imputed$survived
+ggplot(df, aes(PC1, PC2, color = val)) + 
+    geom_point() +
+    DALEX::theme_ema()
+```
+
+
+
+# Simple model with arborist
+
+Let's use the `arborist` to train the model.
 
 ```{r}
 # prepare model
-library("forester")
+library("arborist")
 model_fr <- train(titanic_imputed, "survived")
 model_fr
 ```
